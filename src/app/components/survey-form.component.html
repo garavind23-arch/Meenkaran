@@ -1,3 +1,30 @@
+<div class="fish-container">
+  <div *ngFor="let fish of fishElements; let i = index"
+       class="fish"
+       [style.top.%]="fish.top"
+       [style.animation-duration.s]="fish.duration"
+       [style.animation-delay.s]="fish.delay">
+    <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+      <path [attr.fill]="fish.color"
+            d="M10,25 Q20,15 40,20 L50,15 L55,20 Q70,22 80,25 Q70,28 55,30 L50,35 L40,30 Q20,35 10,25 Z"
+            opacity="0.8"/>
+      <circle [attr.fill]="fish.color" cx="42" cy="23" r="2" opacity="0.9"/>
+      <path [attr.fill]="fish.color"
+            d="M5,25 Q8,20 10,25 Q8,30 5,25 Z"
+            opacity="0.7"/>
+    </svg>
+  </div>
+</div>
+
+<div *ngFor="let bubble of bubbleElements"
+     class="bubble"
+     [style.left.%]="bubble.left"
+     [style.width.px]="bubble.size"
+     [style.height.px]="bubble.size"
+     [style.animation-duration.s]="bubble.duration"
+     [style.animation-delay.s]="bubble.delay">
+</div>
+
 <div class="survey-container">
   <div class="survey-header">
     <h1>Freshwater Ecosystems & their Conservation</h1>

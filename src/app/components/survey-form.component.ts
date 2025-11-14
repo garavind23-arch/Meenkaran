@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService, SurveyResponse, ThreatRatings } from '../services/supabase.service';
@@ -10,7 +10,10 @@ import { SupabaseService, SurveyResponse, ThreatRatings } from '../services/supa
   templateUrl: './survey-form.component.html',
   styleUrls: ['./survey-form.component.css']
 })
-export class SurveyFormComponent {
+export class SurveyFormComponent implements OnInit, OnDestroy {
+  fishElements: Array<{top: number, duration: number, delay: number, color: string}> = [];
+  bubbleElements: Array<{left: number, size: number, duration: number, delay: number}> = [];
+  private animationInterval: any;
   formData: SurveyResponse = {
     age: '',
     education: '',
@@ -64,6 +67,40 @@ export class SurveyFormComponent {
   String = String;
 
   constructor(private supabaseService: SupabaseService) {}
+
+  ngOnInit() {
+    this.createFish();
+    this.createBubbles();
+  }
+
+  ngOnDestroy() {
+    if (this.animationInterval) {
+      clearInterval(this.animationInterval);
+    }
+  }
+
+  createFish() {
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
+    for (let i = 0; i < 8; i++) {
+      this.fishElements.push({
+        top: Math.random() * 80 + 10,
+        duration: Math.random() * 20 + 15,
+        delay: Math.random() * 10,
+        color: colors[i % colors.length]
+      });
+    }
+  }
+
+  createBubbles() {
+    for (let i = 0; i < 15; i++) {
+      this.bubbleElements.push({
+        left: Math.random() * 100,
+        size: Math.random() * 20 + 10,
+        duration: Math.random() * 10 + 8,
+        delay: Math.random() * 8
+      });
+    }
+  }
 
   async onSubmit() {
     this.isSubmitting = true;
