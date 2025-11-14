@@ -1,0 +1,247 @@
+<div class="survey-container">
+  <div class="survey-header">
+    <h1>Freshwater Ecosystems & their Conservation</h1>
+    <div class="intro-text">
+      <p>
+        The earth is a water planet, with about 70% of its surface covered in water, but readily accessible freshwater sources account for only about 1% of our water. Freshwater ecosystems in India are incredibly diverse and are under threat from climate change, pollution, habitat modification and overexploitation.
+      </p>
+      <p>
+        The images you see on the merchandise here all represent species that are found in freshwater habitats in the Western Ghats or North East India, and nowhere else.
+      </p>
+      <p>
+        This short survey is to measure public awareness of freshwater ecosystems in India, and attitudes towards their conservation. We will use data from this survey to design outreach programmes that will hopefully result in a better future for our freshwater ecosystems and their endemic flora and fauna.
+      </p>
+    </div>
+  </div>
+
+  <form #surveyForm="ngForm" (ngSubmit)="onSubmit()" class="survey-form">
+    <section class="demographics-section">
+      <h2>Demographics</h2>
+
+      <div class="form-group">
+        <label for="age">Age: *</label>
+        <input
+          type="text"
+          id="age"
+          name="age"
+          [(ngModel)]="formData.age"
+          required
+          placeholder="Enter your age"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="education">Education (UG/PG/PhD): *</label>
+        <select id="education" name="education" [(ngModel)]="formData.education" required>
+          <option value="">Select education level</option>
+          <option value="UG">UG (Undergraduate)</option>
+          <option value="PG">PG (Postgraduate)</option>
+          <option value="PhD">PhD</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="works_in_conservation">Do you work in a conservation or allied field?: *</label>
+        <select id="works_in_conservation" name="works_in_conservation" [(ngModel)]="formData.works_in_conservation" required>
+          <option value="">Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="awareness_rating">
+          On a scale of 0 (no idea) to 5 (well informed), how would you rate your awareness of freshwater ecosystems in India?: *
+        </label>
+        <div class="rating-container">
+          <input
+            type="range"
+            id="awareness_rating"
+            name="awareness_rating"
+            min="0"
+            max="5"
+            [(ngModel)]="formData.awareness_rating"
+            required
+          />
+          <span class="rating-value">{{ formData.awareness_rating }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="questions-section">
+      <h2>Survey Questions</h2>
+
+      <div class="form-group">
+        <label for="q01">01. What comes to mind when you think of a freshwater ecosystem? (5-10 key words) *</label>
+        <textarea
+          id="q01"
+          name="q01"
+          [(ngModel)]="formData.q01_freshwater_keywords"
+          required
+          rows="4"
+          placeholder="Enter 5-10 key words..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="q02">
+          02. Can you think of at least 5 freshwater species (any plant / invertebrate / fish / amphibian / reptile / bird / mammal) that are threatened by freshwater habitat loss in India? *
+        </label>
+        <textarea
+          id="q02"
+          name="q02"
+          [(ngModel)]="formData.q02_threatened_species"
+          required
+          rows="4"
+          placeholder="List at least 5 species..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="q03">03. Can you name two freshwater fish species that are endemic to the Western Ghats? *</label>
+        <textarea
+          id="q03"
+          name="q03"
+          [(ngModel)]="formData.q03_endemic_fish"
+          required
+          rows="3"
+          placeholder="Name two endemic fish species..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="q04">04. What, in your opinion, are the major threats to freshwater ecosystems in India? (5-10 key words) *</label>
+        <textarea
+          id="q04"
+          name="q04"
+          [(ngModel)]="formData.q04_major_threats"
+          required
+          rows="4"
+          placeholder="Enter 5-10 key words..."
+        ></textarea>
+      </div>
+
+      <div class="form-group threat-ratings">
+        <label>05. Please rate the following, in terms of their impact on freshwater ecosystems, on a scale of 1 (not a threat) to 5 (very serious threat) *</label>
+
+        <div class="threat-list">
+          <div *ngFor="let threat of threats; let i = index" class="threat-item">
+            <div class="threat-label">
+              <span class="threat-letter">{{ String.fromCharCode(65 + i) }}.</span>
+              {{ threat.label }}
+            </div>
+            <div class="threat-rating">
+              <label *ngFor="let rating of [1, 2, 3, 4, 5]" class="radio-label">
+                <input
+                  type="radio"
+                  [name]="'threat_' + threat.key"
+                  [value]="rating"
+                  [checked]="getThreatRating(threat.key) === rating"
+                  (change)="setThreatRating(threat.key, rating)"
+                  required
+                />
+                <span>{{ rating }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="q07">07. In your opinion, what taxa would make ideal umbrella species for freshwater conservation in India? (more than one possible option) *</label>
+        <textarea
+          id="q07"
+          name="q07"
+          [(ngModel)]="formData.q07_umbrella_species"
+          required
+          rows="4"
+          placeholder="Enter your answer..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="q08">08. Would you support conservation efforts focused on often overlooked components of freshwater biodiversity (plants, small fauna)? *</label>
+        <select id="q08" name="q08" [(ngModel)]="formData.q08_support_overlooked" required>
+          <option value="">Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Maybe">Maybe</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="q09">09. Would freshwater biodiversity conservation be improved by concentrating efforts in a single location or by spreading efforts over multiple locations? *</label>
+        <select id="q09" name="q09" [(ngModel)]="formData.q09_conservation_approach" required>
+          <option value="">Select an option</option>
+          <option value="Single Location">Single Location</option>
+          <option value="Multiple Locations">Multiple Locations</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="q10">10. What innovations can we develop to more effectively engage the general public in conserving freshwater ecosystems? *</label>
+        <textarea
+          id="q10"
+          name="q10"
+          [(ngModel)]="formData.q10_engagement_innovations"
+          required
+          rows="4"
+          placeholder="Enter your ideas..."
+        ></textarea>
+      </div>
+    </section>
+
+    <section class="volunteer-section">
+      <h2>Volunteer Interest</h2>
+
+      <div class="form-group">
+        <label for="willing_to_volunteer">Would you be willing to volunteer time/funds towards freshwater ecosystem conservation in India? *</label>
+        <select id="willing_to_volunteer" name="willing_to_volunteer" [(ngModel)]="formData.willing_to_volunteer" required>
+          <option value="">Select an option</option>
+          <option value="Yes - Time">Yes - Time</option>
+          <option value="Yes - Funds">Yes - Funds</option>
+          <option value="Yes - Both">Yes - Both Time and Funds</option>
+          <option value="No">No</option>
+          <option value="Maybe">Maybe</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="contact_name">Name (Optional - if you would like to be contacted about freshwater conservation efforts in India):</label>
+        <input
+          type="text"
+          id="contact_name"
+          name="contact_name"
+          [(ngModel)]="formData.contact_name"
+          placeholder="Enter your name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="contact_info">Contact Information (Optional - Email or Phone):</label>
+        <input
+          type="text"
+          id="contact_info"
+          name="contact_info"
+          [(ngModel)]="formData.contact_info"
+          placeholder="Enter your email or phone number"
+        />
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="!surveyForm.valid || isSubmitting" class="submit-button">
+        {{ isSubmitting ? 'Submitting...' : 'Submit Survey' }}
+      </button>
+    </div>
+
+    <div *ngIf="submitSuccess" class="success-message">
+      Thank you! Your survey response has been submitted successfully.
+    </div>
+
+    <div *ngIf="submitError" class="error-message">
+      {{ submitError }}
+    </div>
+  </form>
+</div>
